@@ -1,6 +1,6 @@
 <resources>
 
-    !-- *************** -->
+    <!-- *************** -->
     <!-- HomeScreen -->
     <!-- *************** -->
     <string name="home_app_bar_title">TMDB Movies</string>
@@ -11,15 +11,13 @@
     <string name="home_screen_movie_image_description">Movie Image</string>
     <string name="home_screen_retry">Retry</string>
 
-    !-- *************** -->
-    <!-- Alert Title & Messages -->
     <!-- *************** -->
-    <string name="title_no_internet_connection">No internet connection</string>
-    <string name="message_no_internet_connection">Please check your internet connection and try again.</string>
-    <string name="title_error_in_request">Error in making request</string>
-    <string name="message_error_in_request">There is an issue to make the request</string>
-    <string name="error_page_not_found">The page NOT found. Please check your URL.</string>
-    <string name="error_unauthorized">You are NOT authorized to use this service.</string>
-    <string name="error_internal_server_error">There is an issue with the server. Please try again.</string>
-    <string name="alert_ok_label">OK</string>
+    <!-- Detail Screen -->
+    <!-- *************** -->
+    <string name="detail_screen_overview">Overview</string>
+    <string name="detail_screen_release_date">Release Date</string>
+    <string name="detail_screen_vote_count">Vote Count</string>
+    <string name="detail_screen_vote_average">Average</string>
+    <string name="detail_screen_popularity">Popularity</string>
+
 </resources>

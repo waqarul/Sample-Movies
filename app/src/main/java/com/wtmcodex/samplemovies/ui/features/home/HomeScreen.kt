@@ -8,31 +8,36 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.wtmcodex.samplemovies.R
+import com.wtmcodex.samplemovies.constants.APIConstants
 import com.wtmcodex.samplemovies.data.movie.base.ScreenState
 import com.wtmcodex.samplemovies.model.movie.Movie
+import com.wtmcodex.samplemovies.ui.common.AsyncImage
 import com.wtmcodex.samplemovies.ui.common.HomeAppBar
 import com.wtmcodex.samplemovies.ui.common.LoadingItem
 import com.wtmcodex.samplemovies.ui.common.LoadingView
+import com.wtmcodex.samplemovies.ui.theme.AppColor
 import com.wtmcodex.samplemovies.ui.theme.Black
+import com.wtmcodex.samplemovies.ui.theme.Gray300
 
 @Composable
 fun HomeScreen(
@@ -41,7 +46,6 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val scaffoldState = rememberScaffoldState()
-    // HandleSideEffect(homeViewModel.uiSideEffect(), scaffoldState)
     Scaffold(topBar = {
         HomeAppBar(
             title = stringResource(id = R.string.home_app_bar_title),
@@ -70,7 +74,6 @@ fun MovieListing(openMovieDetails: (Long) -> Unit, homeViewModel: HomeViewModel)
 
     when (state.screenState) {
         is ScreenState.Loading -> {
-            LoadingView(modifier = Modifier.fillMaxSize())
         }
         is ScreenState.Error -> {
             ErrorItem { homeViewModel.initData() }
@@ -78,29 +81,33 @@ fun MovieListing(openMovieDetails: (Long) -> Unit, homeViewModel: HomeViewModel)
         is ScreenState.Success -> {
             val lazyMovieItems = state.movies?.collectAsLazyPagingItems()
             lazyMovieItems?.let { movieItems ->
-                LazyVerticalGrid(columns = GridCells.Fixed(2), content = {
-                    items(movieItems.itemCount) { index ->
-                        movieItems[index]?.let {
-                            MovieItem(movie = it, onClick = openMovieDetails)
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(
+                        start = 12.dp,
+                        top = 16.dp,
+                        end = 12.dp,
+                        bottom = 16.dp
+                    ),
+                    content = {
+                        items(movieItems.itemCount) { index ->
+                            movieItems[index]?.let {
+                                MovieItem(movie = it, onClick = openMovieDetails)
+                            }
                         }
-                    }
 
-                    movieItems.apply {
-                        when {
-                            loadState.refresh is LoadState.Loading -> {
-                                item { LoadingView(modifier = Modifier.fillMaxSize()) }
-                            }
-                            loadState.append is LoadState.Loading -> {
-                                item { LoadingItem() }
-                                item { LoadingItem() }
-                            }
-                            loadState.refresh is LoadState.Error -> {
-                            }
-                            loadState.append is LoadState.Error -> {
+                        movieItems.apply {
+                            when {
+                                loadState.refresh is LoadState.Loading -> {
+                                    item { LoadingView(modifier = Modifier.fillMaxSize()) }
+                                }
+                                loadState.append is LoadState.Loading -> {
+                                    item { LoadingItem() }
+                                    item { LoadingItem() }
+                                }
                             }
                         }
-                    }
-                })
+                    })
             }
         }
     }
@@ -137,47 +144,56 @@ fun ErrorItem(buttonClick: () -> Unit) {
 fun MovieItem(movie: Movie, onClick: (Long) -> Unit) {
     Card(
         modifier = Modifier
+            .height(200.dp)
             .padding(
                 bottom = 5.dp, top = 5.dp,
                 start = 5.dp, end = 5.dp
             )
-            .fillMaxWidth()
+            .background(Color.Transparent)
             .clickable(onClick = { onClick(movie.id) }),
         shape = RoundedCornerShape(15.dp),
+        backgroundColor = Gray300,
         elevation = 12.dp
     ) {
-        Row(
-            modifier = Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .background(MaterialTheme.colors.surface)
-        ) {
+        Box {
+            AsyncImage(
+                url = "${APIConstants.IMAGE_URL}${movie.posterPath}",
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
             Column(
                 modifier = Modifier
-                    .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 8.dp)
-                    .align(Alignment.CenterVertically)
+                    .align(Alignment.BottomStart)
+                    .padding(vertical = 2.dp)
+
             ) {
-                Text(
+                TextItem(
                     text = movie.title,
-                    fontWeight = FontWeight.Bold,
-                    style = TextStyle(fontSize = 18.sp),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    color = androidx.compose.ui.graphics.Color.Black
+                    modifier = Modifier.padding(bottom = 4.dp),
+                    textStyle = typography.bodyMedium
                 )
-                CompositionLocalProvider(
-                    LocalContentAlpha provides ContentAlpha.medium
-                ) {
-                    Text(
-                        text = movie.overview,
-                        style = TextStyle(fontSize = 14.sp),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(end = 25.dp)
-                    )
-                }
+                TextItem(
+                    text = "${movie.voteCount} votes",
+                    modifier = Modifier.padding(bottom = 4.dp),
+                    textStyle = typography.bodySmall
+                )
             }
         }
     }
+}
+
+@Composable
+fun TextItem(text: String, modifier: Modifier, textStyle: TextStyle) {
+    androidx.compose.material3.Text(
+        text = text,
+        color = Color.White,
+        maxLines = 1,
+        style = textStyle,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier
+            .background(color = AppColor)
+            .padding(all = 6.dp)
+    )
 }
 
 @Preview(showBackground = true)

@@ -50,12 +50,18 @@ val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = PlayFair,
         fontWeight = FontWeight.Normal,
-        fontSize = 18.sp
+        fontSize = 16.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = PlayFair,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 14.sp,
+        color = Black
+    ),
+    bodySmall = TextStyle(
+        fontFamily = PlayFair,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
         color = Black
     ),
     labelLarge = TextStyle(

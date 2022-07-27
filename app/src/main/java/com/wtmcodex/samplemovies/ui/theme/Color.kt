@@ -19,3 +19,5 @@ val Gray850 = Color(0xFF303030)
 val White = Color(0xFFFFFFFF)
 val AmberA400 = Color(0xFFFFC400)
 val Orange400 = Color(0xFFFF9100)
+
+val AppColor = Color(0xFFF50057)

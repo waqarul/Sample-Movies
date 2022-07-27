@@ -10,13 +10,13 @@ buildscript {
         jwPlayerVersion = '4.5.1'
         exoplayerVersion = '2.16.1'
         retrofit_version = "2.9.0"
-        okhttp_version = "4.9.3"
+        okhttp_version = "5.0.0-alpha.2"
         gson_version = "2.8.9"
         glide_version = "1.5.2"
         system_ui_controller_version = "0.24.13-rc"
         room_version = "2.4.2"
-        jetpack_paging_version = "1.0.0-alpha12"
-        coil_version = "1.3.1"
+        jetpack_paging_version = "1.0.0-alpha15"
+        coil_version = "2.1.0"
         jetpack_constraint_layout_version = "1.0.0-beta02"
     }
     repositories {

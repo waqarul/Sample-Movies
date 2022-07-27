@@ -7,5 +7,7 @@ interface APIConstants {
 
         const val READ_TIME_OUT_DELAY = 2L
         const val CONNECT_TIME_OUT_DELAY = 2L
+
+        const val IMAGE_URL = "https://image.tmdb.org/t/p/w500"
     }
 }
